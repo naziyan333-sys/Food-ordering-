@@ -5,7 +5,8 @@ const cors = require('cors');
 
 const app = express();
 app.use(cors()); // Allows your HTML file to talk to this server
-app.use(express.json()); // Allows the server to read JSON data
+app.use(express.json()); // Parse JSON bodies
+app.use(express.static(__dirname)); // Allows the server to read JSON data
 
 // 2. Connect to your SQL Database
 const db = mysql.createConnection({
@@ -35,10 +36,10 @@ app.get('/api/menu', (req, res) => {
 
 // 2. ADMIN UPDATE PRICE OR AVAILABILITY
 app.put('/api/menu/update', (req, res) => {
-    const { icode, newPrice, isAvailable } = req.body;
+    const { icode, newPrice, available } = req.body;
     const sql = "UPDATE Imaster SET price = ?, available = ? WHERE icode = ?";
     
-    db.query(sql, [newPrice, isAvailable, icode], (err, result) => {
+    db.query(sql, [newPrice, available, icode], (err, result) => {
         if (err) return res.status(500).json({ error: err.message });
         res.json({ message: "Item updated successfully!" });
     });
@@ -60,6 +61,6 @@ app.post('/api/order', (req, res) => {
 });
 
 // Start the server on port 3000
-app.listen(3306, () => {
-    console.log('🚀 Server running on http://localhost:3306');
+app.listen(3000, () => {
+    console.log('🚀 Server running on http://localhost:3000');
 });
